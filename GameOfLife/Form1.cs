@@ -47,7 +47,7 @@ namespace GameOfLife
                     // int count = CountNeighbor
                     int count = CountNeighborsFinite(x, y);
                     // Apply the rules
-
+                    ggez
 
 
                     //Turn it on/off the scratchPad
