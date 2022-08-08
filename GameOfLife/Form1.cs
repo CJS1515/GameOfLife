@@ -13,9 +13,9 @@ namespace GameOfLife
     public partial class Form1 : Form
     {
         // The universe array
-        bool[,] universe = new bool[6, 5];
+        bool[,] universe = new bool[40, 30];
 
-        bool[,] scratchPad = new bool[6, 5];
+        bool[,] scratchPad = new bool[40, 30];
 
         // Drawing colors
         Color gridColor = Color.Black;
@@ -47,7 +47,7 @@ namespace GameOfLife
                     // int count = CountNeighbor
                     int count = CountNeighborsFinite(x, y);
                     // Apply the rules
-                    ggez
+                    
 
 
                     //Turn it on/off the scratchPad
