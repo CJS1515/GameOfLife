@@ -13,9 +13,9 @@ namespace GameOfLife
     public partial class Form1 : Form
     {
         // The universe array
-        bool[,] universe = new bool[40, 30];
+        bool[,] universe = new bool[10, 10];
 
-        bool[,] scratchPad = new bool[40, 30];
+        bool[,] scratchPad = new bool[10, 10];
 
         // Drawing colors
         Color gridColor = Color.Black;
@@ -47,10 +47,14 @@ namespace GameOfLife
                     // int count = CountNeighbor
                     int count = CountNeighborsFinite(x, y);
                     // Apply the rules
-                    
-
-
-                    //Turn it on/off the scratchPad
+                    if (universe[x,y] = true && count <  2) 
+                    { scratchPad[x,y] = false ; }
+                    else if (universe[x,y] = true && count > 3) 
+                    { scratchPad[x, y] = false; }
+                    else if (universe[x,y] = true && count == 2 || count == 3) 
+                    { scratchPad[x, y] = true; }
+                    else if (universe[x,y] = false && count == 3) 
+                    {scratchPad[x,y] = true; }
                 }
             }
             // copy from scratchPad to universe
@@ -86,7 +90,7 @@ namespace GameOfLife
                     if(xCheck >= xLen) { continue; }
                     if(yCheck >= yLen) { continue; }
 
-                    if (universe[xCheck, yCheck] == true) count++;
+                    if (universe[xCheck, yCheck] == true) { count++; }
                 }
             }
             return count;
@@ -222,6 +226,20 @@ namespace GameOfLife
                 }
             }
             graphicsPanel1.Invalidate();
+        }
+
+        private void colorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ColorDialog dlg = new ColorDialog();
+
+            dlg.Color = graphicsPanel1.BackColor;
+
+            if (DialogResult.OK == dlg.ShowDialog())
+            {
+                graphicsPanel1.BackColor = dlg.Color;
+
+                graphicsPanel1.Invalidate();
+            }
         }
     }
 }
