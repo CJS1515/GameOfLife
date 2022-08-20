@@ -47,14 +47,16 @@ namespace GameOfLife
                     // int count = CountNeighbor
                     int count = CountNeighborsFinite(x, y);
                     // Apply the rules
-                    if (universe[x,y] = true && count <  2) 
+                    if (universe[x,y] == true && count <  2) 
                     { scratchPad[x,y] = false ; }
-                    else if (universe[x,y] = true && count > 3) 
+                    else if (universe[x,y] == true && count > 3) 
                     { scratchPad[x, y] = false; }
-                    else if (universe[x,y] = true && count == 2 || count == 3) 
+                    else if (universe[x,y] == true && count == 2 || count == 3) 
                     { scratchPad[x, y] = true; }
-                    else if (universe[x,y] = false && count == 3) 
+                    else if (universe[x,y] == false && count == 3) 
                     {scratchPad[x,y] = true; }
+                    else if (universe[x,y] == false && count != 3)
+                    { scratchPad[x, y] = false; }
                 }
             }
             // copy from scratchPad to universe
@@ -84,7 +86,7 @@ namespace GameOfLife
                 {
                     int xCheck = x + xOffset;
                     int yCheck = y + yOffset;
-                    if (xOffset == 0 & yOffset == 0) { continue; }
+                    if (xOffset == 0 && yOffset == 0) { continue; }
                     if (xCheck < 0) { continue; }
                     if(yCheck < 0) { continue; }
                     if(xCheck >= xLen) { continue; }
@@ -228,6 +230,7 @@ namespace GameOfLife
             graphicsPanel1.Invalidate();
         }
 
+        int number = 10;
         private void colorToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ColorDialog dlg = new ColorDialog();
@@ -239,6 +242,30 @@ namespace GameOfLife
                 graphicsPanel1.BackColor = dlg.Color;
 
                 graphicsPanel1.Invalidate();
+            }
+        }
+
+        private void modalToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ModalDialog dlg = new ModalDialog();
+
+            dlg.SetNumber(number);
+
+            if(DialogResult.OK == dlg.ShowDialog())
+            {
+                number = dlg.GetNumber();
+                graphicsPanel1.Invalidate();
+            }
+        }
+
+        private void colorToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            ColorDialog dlg = new ColorDialog();
+            dlg.Color = graphicsPanel1.BackColor;
+
+            if(DialogResult.OK == dlg.ShowDialog())
+            {
+                graphicsPanel1.BackColor = dlg.Color;
             }
         }
     }
