@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -35,8 +36,28 @@ namespace GameOfLife
             timer.Interval = 100; // milliseconds
             timer.Tick += Timer_Tick;
             timer.Enabled = false; // start timer running
+            //Read the property
+            graphicsPanel1.BackColor = Properties.Settings.Default.PanelColor;
+            cellColor = Properties.Settings.Default.CellColor;
+            gridColor = Properties.Settings.Default.GridColor;
         }
 
+        private void RandomizeTime()
+        {
+            Random rand = new Random();
+            for (int y = 0; y < universe.GetLength(1); y++)
+            {
+                for (int x = 0; x < universe.GetLength(0); x++)
+                {
+                    //rand.Next(0,2);
+                    if (rand.Next(0, 2) == 0)
+                    {
+                        universe[x, y] = true;
+                        graphicsPanel1.Invalidate();
+                    }
+                }
+            }
+        }
         // Calculate the next generation of cells
         private void NextGeneration()
         {
@@ -193,24 +214,24 @@ namespace GameOfLife
                 graphicsPanel1.Invalidate();
             }
         }
-
+        //Exit Option
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.Close();
         }
-
+        // Start Button
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
             // set timer true
             timer.Enabled = true;
         }
-
+        //Stop Button
         private void toolStripButton2_Click(object sender, EventArgs e)
         {
             // set timer false
             timer.Enabled = false;
         }
-
+        //Next Button
         private void toolStripButton3_Click(object sender, EventArgs e)
         {
             // call next generation once
@@ -244,7 +265,7 @@ namespace GameOfLife
                 graphicsPanel1.Invalidate();
             }
         }
-
+        //Color Modal option
         private void modalToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ModalDialog dlg = new ModalDialog();
@@ -257,7 +278,7 @@ namespace GameOfLife
                 graphicsPanel1.Invalidate();
             }
         }
-
+        //Color Menu Option
         private void colorToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             ColorDialog dlg = new ColorDialog();
@@ -266,6 +287,165 @@ namespace GameOfLife
             if(DialogResult.OK == dlg.ShowDialog())
             {
                 graphicsPanel1.BackColor = dlg.Color;
+            }
+        }
+        //Form Closed
+        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            //Update Property
+            Properties.Settings.Default.PanelColor = graphicsPanel1.BackColor;
+            Properties.Settings.Default.CellColor = cellColor;
+            Properties.Settings.Default.GridColor = gridColor;
+            Properties.Settings.Default.Save();
+        }
+        //Reset setting
+        private void resetToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.Reset();
+
+            graphicsPanel1.BackColor = Properties.Settings.Default.PanelColor;
+            cellColor = Properties.Settings.Default.CellColor;
+            gridColor = Properties.Settings.Default.GridColor;
+        }
+        //Reload Setting
+        private void reloadToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.Reload();
+
+            graphicsPanel1.BackColor = Properties.Settings.Default.PanelColor;
+            cellColor = Properties.Settings.Default.CellColor;
+            gridColor = Properties.Settings.Default.GridColor;
+        }
+
+        private void customizeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void backgroundColorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ColorDialog dlg = new ColorDialog();
+            dlg.Color = graphicsPanel1.BackColor;
+
+            if (DialogResult.OK == dlg.ShowDialog())
+            {
+                graphicsPanel1.BackColor = dlg.Color;
+            }
+        }
+
+        private void cellColorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ColorDialog dlg = new ColorDialog();
+            dlg.Color = cellColor;
+
+            if (DialogResult.OK == dlg.ShowDialog())
+            {
+                cellColor = dlg.Color;
+            }
+        }
+
+        private void gridColorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ColorDialog dlg = new ColorDialog();
+            dlg.Color = gridColor;
+            if (DialogResult.OK == dlg.ShowDialog())
+            {
+                gridColor = dlg.Color;
+            }
+        }
+
+        private void fromTimeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RandomizeTime();
+        }
+
+        private void fromSeedToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RandomSeed dlg = new RandomSeed();
+            
+            if(DialogResult.OK == dlg.ShowDialog())
+            {
+                   
+            }
+        }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog dlg = new SaveFileDialog();
+            dlg.Filter = "All Files|*.*|Cells|*.cells";
+            dlg.FilterIndex = 2; dlg.DefaultExt = "cells";
+            if(DialogResult.OK == dlg.ShowDialog())
+            {
+                StreamWriter writer = new StreamWriter(dlg.FileName);
+                for (int y = 0; y < universe.GetLength(1); y++)
+                {
+                    String currentRow = String.Empty;
+                    for (int x = 0; x < universe.GetLength(0); x++)
+                    {
+                        if(universe[x,y] == true)
+                        {
+                            currentRow +='O';
+                        }
+                        else if(universe[x,y] == false)
+                        {
+                            currentRow += '.';
+                        }
+                        writer.WriteLine(currentRow);
+                    }
+                }
+                writer.Close();
+            }
+        }
+
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog dlg = new OpenFileDialog();
+            dlg.Filter = "All Files|*.*|Cells|*.cells";
+            dlg.FilterIndex = 2;
+            if(DialogResult.OK == dlg.ShowDialog())
+            {
+                StreamReader reader = new StreamReader(dlg.FileName);
+                int maxWidth = 0;
+                int maxHeight = 0;
+                while(!reader.EndOfStream)
+                {
+                    string row = reader.ReadLine();
+                    if (row[0] == '!') 
+                    {
+                        continue;
+                    }
+                    if(row[0] != '!')
+                    {
+                        maxHeight ++;
+                        maxWidth = row.Length;
+
+                    }
+                }
+                universe = new bool[maxWidth, maxHeight];
+                scratchPad = new bool[maxWidth, maxHeight];
+                reader.BaseStream.Seek(0, SeekOrigin.Begin);
+                int yPos = 0;
+                while (!reader.EndOfStream)
+                {
+                    string row = reader.ReadLine();
+                    if(row[0] == '!') { continue; }
+                    if(row[0] != '!')
+                    {
+                        for (int xPos = 0; xPos < row.Length; xPos++)
+                        {
+                            if(row[xPos] == 'O')
+                            {
+                                universe[xPos,yPos ] = true;
+                            }
+                            else if(row[xPos] == '.')
+                            {
+                                universe[xPos,yPos] = false;
+                            }
+                            
+                        }
+                    }
+                }
+                reader.Close();
             }
         }
     }

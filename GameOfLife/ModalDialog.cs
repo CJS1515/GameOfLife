@@ -19,16 +19,16 @@ namespace GameOfLife
 
         public int GetNumber()
         {
-            return (int)numericUpDownNumber.Value;
+            return (int)Timer.Value;
         }
         public void SetNumber(int number)
         {
-            numericUpDownNumber.Value = number;
+            Timer.Value = number;
         }
 
-        private void numericUpDownNumber_ValueChanged(object sender, EventArgs e)
+        private void Timer_ValueChanged(object sender, EventArgs e)
         {
-
+            
         }
 
         private void label1_Click(object sender, EventArgs e)
@@ -36,5 +36,14 @@ namespace GameOfLife
 
         }
 
+        private void WidthCounter_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void HeightCounter_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }
