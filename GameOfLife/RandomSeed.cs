@@ -17,6 +17,18 @@ namespace GameOfLife
             InitializeComponent();
         }
 
+        public int Seed
+        {
+            get
+            {
+                return (int)seed.Value;
+            }
+            set
+            {
+                seed.Value = value;
+            }
+        }
+
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)
         {
 

@@ -14,9 +14,8 @@ namespace GameOfLife
     public partial class Form1 : Form
     {
         // The universe array
-        bool[,] universe = new bool[10, 10];
-
-        bool[,] scratchPad = new bool[10, 10];
+        bool[,] universe = new bool[30,30];
+        bool[,] scratchPad = new bool[30, 30];
 
         // Drawing colors
         Color gridColor = Color.Black;
@@ -28,23 +27,45 @@ namespace GameOfLife
         // Generation count
         int generations = 0;
 
+        bool isToroidal = true;
+
         public Form1()
         {
             InitializeComponent();
 
             // Setup the timer
-            timer.Interval = 100; // milliseconds
+            timer.Interval = 1000; // milliseconds
             timer.Tick += Timer_Tick;
             timer.Enabled = false; // start timer running
             //Read the property
             graphicsPanel1.BackColor = Properties.Settings.Default.PanelColor;
             cellColor = Properties.Settings.Default.CellColor;
             gridColor = Properties.Settings.Default.GridColor;
+            //timer = Properties.Settings.Default.Timer;
+            graphicsPanel1.Invalidate();
+
         }
 
         private void RandomizeTime()
         {
             Random rand = new Random();
+            for (int y = 0; y < universe.GetLength(1); y++)
+            {
+                for (int x = 0; x < universe.GetLength(0); x++)
+                {
+                    //rand.Next(0,2);
+                    if (rand.Next(0, 2) == 0)
+                    {
+                        universe[x, y] = true;
+                        graphicsPanel1.Invalidate();
+                    }
+                }
+            }
+        }
+        private void RandomizeSeed(int input)
+        {
+            int seed = input;
+            Random rand = new Random(seed);
             for (int y = 0; y < universe.GetLength(1); y++)
             {
                 for (int x = 0; x < universe.GetLength(0); x++)
@@ -65,21 +86,36 @@ namespace GameOfLife
             {
                 for (int x = 0; x < universe.GetLength(0); x++)
                 {
-                    // int count = CountNeighbor
-                    int count = CountNeighborsFinite(x, y);
+                    int count = CountNeighborsToroidal(x, y);
                     // Apply the rules
-                    if (universe[x,y] == true && count <  2) 
-                    { scratchPad[x,y] = false ; }
-                    else if (universe[x,y] == true && count > 3) 
-                    { scratchPad[x, y] = false; }
-                    else if (universe[x,y] == true && count == 2 || count == 3) 
-                    { scratchPad[x, y] = true; }
-                    else if (universe[x,y] == false && count == 3) 
-                    {scratchPad[x,y] = true; }
-                    else if (universe[x,y] == false && count != 3)
-                    { scratchPad[x, y] = false; }
+                    if(universe[x,y] == true && count < 2)
+                    {
+                        scratchPad[x,y] = false;
+                        continue;
+                    }
+                    if(universe[x,y] == true && count > 3)
+                    {
+                        scratchPad[x, y] = false;
+                        continue;
+                    }
+                    if(universe[x,y] == true && count == 2 || count == 3)
+                    {
+                        scratchPad[x, y] = true;
+                        continue;
+                    }
+                    if(universe[x,y] == false && count ==3)
+                    {
+                        scratchPad[x, y] = true;
+                        continue;
+                    }
+                    if(universe[x,y] == false && count != 3)
+                    {
+                        scratchPad[x, y] = false;
+                        continue;
+                    }
                 }
             }
+            CountCells();
             // copy from scratchPad to universe
             bool[,] temp = universe;
             universe = scratchPad;
@@ -94,6 +130,7 @@ namespace GameOfLife
             //Invalidate graphicsPanel
             graphicsPanel1.Invalidate();
         }
+        //private int CountCells
 
         private int CountNeighborsFinite(int x, int y)
         {
@@ -113,10 +150,27 @@ namespace GameOfLife
                     if(xCheck >= xLen) { continue; }
                     if(yCheck >= yLen) { continue; }
 
-                    if (universe[xCheck, yCheck] == true) { count++; }
+                    if (universe[xCheck, yCheck] == true) count++;
                 }
             }
             return count;
+        }
+
+        private int CountCells()
+        {
+            int cells = 0;
+            for (int y = 0; y < universe.GetLength(1); y++)
+            {
+                for (int x = 0; x < universe.GetLength(0); x++)
+                {
+                   if(universe[x,y] == true)
+                   {
+                        cells++;
+                   }
+                }
+            }
+            toolStripStatusLabelLivingCell.Text = "Living Cells = " + cells.ToString();
+            return cells;
         }
 
         private int CountNeighborsToroidal(int x, int y)
@@ -190,6 +244,7 @@ namespace GameOfLife
             // Cleaning up pens and brushes
             gridPen.Dispose();
             cellBrush.Dispose();
+
         }
 
         private void graphicsPanel1_MouseClick(object sender, MouseEventArgs e)
@@ -209,6 +264,7 @@ namespace GameOfLife
 
                 // Toggle the cell's state
                 universe[x, y] = !universe[x, y];
+                CountCells();
 
                 // Tell Windows you need to repaint
                 graphicsPanel1.Invalidate();
@@ -224,18 +280,23 @@ namespace GameOfLife
         {
             // set timer true
             timer.Enabled = true;
+            graphicsPanel1.Invalidate();
         }
         //Stop Button
         private void toolStripButton2_Click(object sender, EventArgs e)
         {
             // set timer false
             timer.Enabled = false;
+            graphicsPanel1.Invalidate();
+
         }
         //Next Button
         private void toolStripButton3_Click(object sender, EventArgs e)
         {
             // call next generation once
             NextGeneration();
+            graphicsPanel1.Invalidate();
+
         }
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
@@ -246,12 +307,16 @@ namespace GameOfLife
                 for (int x = 0; x < universe.GetLength(0); x++)
                 {
                     universe[x, y] = false;
+                    scratchPad[x, y] = false;
+                    CountCells();
+                    generations = 0;
+                    toolStripStatusLabelGenerations.Text = "Generations = " + generations.ToString();
                 }
             }
             graphicsPanel1.Invalidate();
         }
 
-        int number = 10;
+        
         private void colorToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ColorDialog dlg = new ColorDialog();
@@ -265,16 +330,21 @@ namespace GameOfLife
                 graphicsPanel1.Invalidate();
             }
         }
-        //Color Modal option
+        //universe Options
         private void modalToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ModalDialog dlg = new ModalDialog();
-
-            dlg.SetNumber(number);
-
-            if(DialogResult.OK == dlg.ShowDialog())
+           
+            dlg.SetNumber(timer.Interval);
+            dlg.SetHeight(universe.GetLength(1));
+            dlg.SetWidth(universe.GetLength(0));
+            if (DialogResult.OK == dlg.ShowDialog())
             {
-                number = dlg.GetNumber();
+                int newW = dlg.GetWidth();
+                int newH = dlg.GetHeight();
+                universe = new bool[newW, newH];
+                scratchPad = new bool[newW, newH];
+                timer.Interval = dlg.GetNumber();
                 graphicsPanel1.Invalidate();
             }
         }
@@ -296,6 +366,7 @@ namespace GameOfLife
             Properties.Settings.Default.PanelColor = graphicsPanel1.BackColor;
             Properties.Settings.Default.CellColor = cellColor;
             Properties.Settings.Default.GridColor = gridColor;
+            Properties.Settings.Default.Timer = timer;
             Properties.Settings.Default.Save();
         }
         //Reset setting
@@ -306,6 +377,7 @@ namespace GameOfLife
             graphicsPanel1.BackColor = Properties.Settings.Default.PanelColor;
             cellColor = Properties.Settings.Default.CellColor;
             gridColor = Properties.Settings.Default.GridColor;
+            timer = Properties.Settings.Default.Timer;
         }
         //Reload Setting
         private void reloadToolStripMenuItem_Click(object sender, EventArgs e)
@@ -315,6 +387,7 @@ namespace GameOfLife
             graphicsPanel1.BackColor = Properties.Settings.Default.PanelColor;
             cellColor = Properties.Settings.Default.CellColor;
             gridColor = Properties.Settings.Default.GridColor;
+            timer = Properties.Settings.Default.Timer;
         }
 
         private void customizeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -361,11 +434,13 @@ namespace GameOfLife
 
         private void fromSeedToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            int result = 0;
             RandomSeed dlg = new RandomSeed();
-            
+            dlg.Seed = result;
             if(DialogResult.OK == dlg.ShowDialog())
             {
-                   
+                result = dlg.Seed;
+                RandomizeSeed(result);
             }
         }
 

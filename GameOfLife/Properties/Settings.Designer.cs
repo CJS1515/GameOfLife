@@ -58,5 +58,28 @@ namespace GameOfLife.Properties {
                 this["GridColor"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Windows.Forms.Timer Timer {
+            get {
+                return ((global::System.Windows.Forms.Timer)(this["Timer"]));
+            }
+            set {
+                this["Timer"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("20, 20")]
+        public global::System.Drawing.Size GridSize {
+            get {
+                return ((global::System.Drawing.Size)(this["GridSize"]));
+            }
+            set {
+                this["GridSize"] = value;
+            }
+        }
     }
 }

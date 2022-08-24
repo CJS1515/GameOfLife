@@ -11,5 +11,11 @@
     <Setting Name="GridColor" Type="System.Drawing.Color" Scope="User">
       <Value Profile="(Default)">Black</Value>
     </Setting>
+    <Setting Name="Timer" Type="System.Windows.Forms.Timer" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="GridSize" Type="System.Drawing.Size" Scope="User">
+      <Value Profile="(Default)">20, 20</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

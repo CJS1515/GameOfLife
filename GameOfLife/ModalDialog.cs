@@ -26,9 +26,26 @@ namespace GameOfLife
             Timer.Value = number;
         }
 
+        public int GetWidth()
+        {
+            return (int)WidthCounter.Value;
+        }
+        public void SetWidth(int number)
+        {
+            WidthCounter.Value = number;
+        }
+        public int GetHeight()
+        {
+            return (int)HeightCounter.Value;
+        }
+        public void SetHeight(int number)
+        {
+            HeightCounter.Value = number;
+        }
+
         private void Timer_ValueChanged(object sender, EventArgs e)
         {
-            
+           
         }
 
         private void label1_Click(object sender, EventArgs e)

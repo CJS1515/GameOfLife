@@ -32,8 +32,8 @@ namespace GameOfLife
             this.OK = new System.Windows.Forms.Button();
             this.Cancel = new System.Windows.Forms.Button();
             this.SeedLabel = new System.Windows.Forms.Label();
-            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
+            this.seed = new System.Windows.Forms.NumericUpDown();
+            ((System.ComponentModel.ISupportInitialize)(this.seed)).BeginInit();
             this.SuspendLayout();
             // 
             // OK
@@ -65,13 +65,13 @@ namespace GameOfLife
             this.SeedLabel.TabIndex = 2;
             this.SeedLabel.Text = "Seed";
             // 
-            // numericUpDown1
+            // seed
             // 
-            this.numericUpDown1.Location = new System.Drawing.Point(120, 65);
-            this.numericUpDown1.Name = "numericUpDown1";
-            this.numericUpDown1.Size = new System.Drawing.Size(156, 20);
-            this.numericUpDown1.TabIndex = 3;
-            this.numericUpDown1.ValueChanged += new System.EventHandler(this.numericUpDown1_ValueChanged);
+            this.seed.Location = new System.Drawing.Point(120, 65);
+            this.seed.Name = "seed";
+            this.seed.Size = new System.Drawing.Size(156, 20);
+            this.seed.TabIndex = 3;
+            this.seed.ValueChanged += new System.EventHandler(this.numericUpDown1_ValueChanged);
             // 
             // RandomSeed
             // 
@@ -80,7 +80,7 @@ namespace GameOfLife
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.Cancel;
             this.ClientSize = new System.Drawing.Size(369, 194);
-            this.Controls.Add(this.numericUpDown1);
+            this.Controls.Add(this.seed);
             this.Controls.Add(this.SeedLabel);
             this.Controls.Add(this.Cancel);
             this.Controls.Add(this.OK);
@@ -90,7 +90,7 @@ namespace GameOfLife
             this.Name = "RandomSeed";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "RandomSeed";
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.seed)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -101,6 +101,6 @@ namespace GameOfLife
         private System.Windows.Forms.Button OK;
         private System.Windows.Forms.Button Cancel;
         private System.Windows.Forms.Label SeedLabel;
-        private System.Windows.Forms.NumericUpDown numericUpDown1;
+        private System.Windows.Forms.NumericUpDown seed;
     }
 }

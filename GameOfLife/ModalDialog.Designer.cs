@@ -138,7 +138,7 @@ namespace GameOfLife
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "ModalDialog";
-            this.Text = "ModalDialog";
+            this.Text = "Universe Settings";
             ((System.ComponentModel.ISupportInitialize)(this.Timer)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.HeightCounter)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.WidthCounter)).EndInit();
